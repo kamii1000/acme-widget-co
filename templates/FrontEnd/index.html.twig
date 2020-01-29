@@ -1,11 +1,185 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello!{% endblock %}
+{% block title %}Acme Widget Co{% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
-        <h1>Hello world</h1>
-    </div>
+    {% if not has_error %}
+        <div class="container">
+            <div class="px-4 px-lg-0">
+                <div class="container text-white py-5 text-center">
+                    <h1 class="text-capitalize">Acme Widget Co</h1>
+                    <strong class="mb-0">A proof of concept for the new sales system.</strong>
+                </div>
+
+                <div class="pb-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" class="border-0 bg-gray-300">
+                                                <div class="p-2 px-3 text-uppercase">Product</div>
+                                            </th>
+                                            <th scope="col" class="border-0 bg-gray-300">
+                                                <div class="py-2 text-uppercase">Price</div>
+                                            </th>
+                                            <th scope="col" class="border-0 bg-gray-300">
+                                                <div class="py-2 text-uppercase">Quantity</div>
+                                            </th>
+                                            <th scope="col" class="border-0 bg-gray-300 text-center">
+                                                <div class="py-2 text-uppercase">Action</div>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for product in products %}
+                                            <tr>
+                                                <th scope="row">
+                                                    <div class="p-2">
+                                                        <div class="ml-3 align-middle">
+                                                            <h5 class="mb-0">
+                                                                <strong class="lead align-middle">
+                                                                    {{ product.product }} ({{ product.code }})
+                                                                </strong>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <td class="align-middle">
+                                                    <strong>${{ product.price|number_format(2, '.', ',') }}</strong>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <strong id="selected-quantity-{{ product.code }}">0</strong>
+                                                </td>
+                                                <td class="align-middle d-flex justify-content-end pr-lg-5">
+                                                    <div class="input-group w-auto mr-4">
+                                                        <input data-product-code="{{ product.code }}"
+                                                               id="quantity-{{ product.code }}" class="form-control w-auto
+                                                    product-quantity" type="number" min="1" max="5" value="0"
+                                                               style="max-width: 55px;">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-primary add-product"
+                                                                    data-product-code="{{ product.code }}"
+                                                                    data-toggle="tooltip"
+                                                                    data-placement="top" title="Update cart">
+                                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <button class="btn btn-danger remove-product"
+                                                            data-product-code="{{ product.code }}" data-toggle="tooltip"
+                                                            data-placement="top" title="Remove from cart">
+                                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row py-5 p-4 bg-white shadow-sm">
+                            <div class="col-lg-6">
+                                <div class="bg-gray-300 px-4 py-3 text-uppercase font-weight-bold">Notes for
+                                    seller
+                                </div>
+                                <div class="p-4">
+                                    <p class="font-italic mb-4">
+                                        If you have any extra notes for the seller, please mention them here.
+                                    </p>
+                                    <textarea name="" cols="30" rows="2" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="bg-gray-300 px-4 py-3 text-uppercase font-weight-bold">Order summary</div>
+                                <div class="p-4">
+                                    <ul class="list-unstyled mb-4">
+                                        <li class="d-flex justify-content-between py-3 border-bottom">
+                                            <strong class="text-muted">Order Subtotal </strong>
+                                            <strong id="subtotal-cost">$0.00</strong>
+                                        </li>
+                                        <li class="d-flex justify-content-between py-3 border-bottom">
+                                            <strong class="text-muted">Shipping and handling</strong>
+                                            <strong id="shipping-cost">$0.00</strong>
+                                        </li>
+                                        <li class="d-flex justify-content-between py-3 border-bottom">
+                                            <strong class="text-muted">Tax</strong>
+                                            <strong>$0.00</strong>
+                                        </li>
+                                        <li class="d-flex justify-content-between py-3 border-bottom">
+                                            <strong class="text-muted">Total</strong>
+                                            <h5 class="font-weight-bold" id="total-cost">$0.00</h5>
+                                        </li>
+                                    </ul>
+                                    <a href="#" class="btn btn-primary py-2 btn-block">Procceed to checkout</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+
+        <div class="container d-flex justify-content-center align-middle mt-10">
+            <div class="alert alert-danger align-middle text-center w-75">Error: {{ error_msg }}</div>
+        </div>
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
+    {% if not has_error %}
+        <script>
+            let orderData = {};
+            {% for product in products %}
+            orderData['{{ product.code }}'] = 0;
+            {% endfor %}
+            $(document).ready(function () {
+                $('.add-product').click(function () {
+                    let productCode = $(this).attr('data-product-code');
+                    orderData[productCode] = $('#quantity-' + productCode).val();
+                    $('#selected-quantity-' + productCode).text(orderData[productCode]);
+                    console.log(orderData);
+                    updateOrder();
+                });
+                $('.remove-product').click(function () {
+                    let productCode = $(this).attr('data-product-code');
+                    $('#quantity-' + productCode).val('0');
+                    $('#selected-quantity-' + productCode).text('0');
+                    delete orderData[productCode];
+                    console.log(orderData);
+                    updateOrder();
+                });
+                $('.product-quantity').change(function () {
+                    if ($(this).val() < 1) {
+                        $(this).val('0');
+                    } else if ($(this).val() > 5) {
+                        $(this).val('5');
+                    }
+                });
+            });
+
+            function updateOrder() {
+                $.ajax({
+                    method: "POST",
+                    url: "{{ url('process-order') }}",
+                    data: orderData
+                }).done(function (data) {
+                    console.log(data);
+                    $('#subtotal-cost').text("$" + data['subtotal']);
+                    $('#shipping-cost').text("$" + data['shipping']);
+                    $('#total-cost').text("$" + data['total']);
+                }).fail(function () {
+                    alert("Error in processing order.");
+                });
+            }
+        </script>
+    {% endif %}
 {% endblock %}

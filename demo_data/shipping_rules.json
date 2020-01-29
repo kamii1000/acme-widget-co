@@ -1,0 +1,17 @@
+[
+  {
+    "min_order": 0,
+    "max_order": 49,
+    "cost": 4.95
+  },
+  {
+    "min_order": 50,
+    "max_order": 89,
+    "cost": 2.95
+  },
+  {
+    "min_order": 90,
+    "max_order": 999999,
+    "cost": 0
+  }
+]

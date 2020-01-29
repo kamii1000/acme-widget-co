@@ -1,0 +1,11 @@
+[
+  {
+    "if_product_code": "R01",
+    "if_min_order": 1,
+    "then_discount_percentage": 50,
+    "then_discounted_product": "R01",
+    "then_discounted_product_quantity": 1,
+    "start_date": "2020-01-28",
+    "end_date": "2020-02-10"
+  }
+]

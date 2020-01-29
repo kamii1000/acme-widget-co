@@ -14,9 +14,10 @@ body {
 
 // custom scss
 .pace {
-  border: none; // remove pace faulty border
+  //border: none; // remove pace faulty border
+  border: 1px solid $primary;
 }
 
 .pace .pace-progress {
-  background: white;
+  //background: lightgray !important;
 }
