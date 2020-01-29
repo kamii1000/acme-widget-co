@@ -1,13 +1,13 @@
 # acme-widget-co
 
-##Stack:
+**Stack**:
  - Symfony 5.0
  - Webpack
  - Bootstrap
  - JQuery
  - Font awesome
 
-##Usage:
+**Usage**:
 * Clone this repository
 * Run `composer install` to install required PHP packages. This will take few minutes.
 * Run `npm install` to install required packages for webpack.
