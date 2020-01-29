@@ -1,8 +1,22 @@
-/*imports*/
-
+// imports
 @import "_bs_variables";
 // Customized variables for bootstrap (https://gist.github.com/kamii1000/24cb8624273266ea83fb5e8eea89ef8f)
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap";
 
-// custom css
-@import "../css/custom";
+@import "~font-awesome";
+@import '~select2';
+@import "~animate.css";
+
+body {
+  background: $primary;
+  min-height: 100vh;
+}
+
+// custom scss
+.pace {
+  border: none; // remove pace faulty border
+}
+
+.pace .pace-progress {
+  background: white;
+}
